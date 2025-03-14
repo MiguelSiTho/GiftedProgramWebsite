@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftMessage</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .section { margin-bottom: 20px; }
+        input, button { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <h1>SwiftMessage</h1>
+
+    <div class="section">
+        <h2>Register User</h2>
+        <input type="text" id="username" placeholder="Enter username">
+        <button onclick="registerUser()">Register</button>
+    </div>
+
+    <div class="section">
+        <h2>Send Message</h2>
+        <input type="number" id="senderId" placeholder="Sender ID">
+        <input type="number" id="receiverId" placeholder="Receiver ID">
+        <input type="text" id="messageContent" placeholder="Message content">
+        <button onclick="sendMessage()">Send Message</button>
+    </div>
+
+    <div class="section">
+        <h2>Get Messages</h2>
+        <input type="number" id="user1Id" placeholder="User 1 ID">
+        <input type="number" id="user2Id" placeholder="User 2 ID">
+        <button onclick="getMessages()">Get Messages</button>
+        <div id="messageList"></div>
+    </div>
+
+    <div>
+        <a href="home/home.html">Home</a>
+    </div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:5000';
+
+        async function registerUser() {
+            const username = document.getElementById('username').value;
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username })
+            });
+            const data = await response.json();
+            alert(`User registered with ID: ${data.id}`);
+        }
+
+        async function sendMessage() {
+            const sender_id = document.getElementById('senderId').value;
+            const receiver_id = document.getElementById('receiverId').value;
+            const content = document.getElementById('messageContent').value;
+            const response = await fetch(`${API_URL}/send_message`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sender_id, receiver_id, content })
+            });
+            const data = await response.json();
+            alert(data.message);
+        }
+
+        async function getMessages() {
+            const sender_id = document.getElementById('user1Id').value;
+            const receiver_id = document.getElementById('user2Id').value;
+            const response = await fetch(`${API_URL}/get_messages?sender_id=${sender_id}&receiver_id=${receiver_id}`);
+            const messages = await response.json();
+            const messageList = document.getElementById('messageList');
+            messageList.innerHTML = messages.map(msg => 
+                `<p>From ${msg.sender_id} to ${msg.receiver_id}: ${msg.content}</p>`
+            ).join('');
+        }
+    </script>
+    
+</body>
+</html>

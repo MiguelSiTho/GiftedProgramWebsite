@@ -19,12 +19,17 @@
         </div>
         <h2 class="logo">logo</h2>
         <nav class="navigatin">
-            <a href="#">Home</a>
-            <a href="#">About</a>
+            <a href="../index.html">App</a>
+            <a href="../login/login.html">Login</a>
             <a href="#">Contact</a>
-            <button class="btnlogin-popup">Login</button>
+            <button id="baiano">Login</button>
         </nav>
     </header>
     <nav/>
+    <script>
+        document.getElementById("baiano").addEventListener("click", function() {
+            window.location.href = "../login/login.html"
+        });
+    </script>
 </body>
 </html>
